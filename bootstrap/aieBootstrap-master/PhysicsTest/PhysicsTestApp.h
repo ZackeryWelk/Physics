@@ -16,6 +16,8 @@ public:
 	virtual bool startup();
 	virtual void shutdown();
 
+	void setupContinuousDemo(glm::vec2 startPos, float inclination, float speed, float gravity);
+
 	virtual void update(float deltaTime);
 	virtual void draw();
 
@@ -24,4 +26,5 @@ protected:
 	aie::Renderer2D*	m_2dRenderer;
 	aie::Font*			m_font;
 	PhysicsScene*		m_physicsScene;
+	Sphere*				m_test;
 };

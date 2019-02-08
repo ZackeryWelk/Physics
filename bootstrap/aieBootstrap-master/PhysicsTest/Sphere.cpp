@@ -25,9 +25,7 @@ bool Sphere::checkCollision(PhysicsObject * pOther)
 		{
 			return true;
 		}
+		else
+			return false;
 	}
-	
-		
-		
-	//return false;
 }
