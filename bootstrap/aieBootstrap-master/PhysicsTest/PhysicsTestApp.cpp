@@ -26,41 +26,54 @@ bool PhysicsTestApp::startup() {
 	m_physicsScene->setGravity(glm::vec2(0, -10));
 	m_physicsScene->setTimeStep(0.01f);
 
-	/*Projectile Physics Pt2*/
-	float radius = 1.0f;
-	float speed = 20;
-	glm::vec2 startPos(-40, 0);
-	float inclination = 45;
-	
-	glm::vec2 initialSpeed = glm::vec2(cos(inclination * 0.017) * speed, sin(inclination * 0.017) * speed);
-	
-	m_test = new Sphere(startPos, initialSpeed, 2, radius, glm::vec4(1,0,0,1));
-	m_physicsScene->addActor(m_test);
-	
-
 
 	/*projectile physics Pt 1*/
 	//setupContinuousDemo(glm::vec2(-40, 0), 45, 30, -10);
 
+
+	/*Projectile Physics Pt2*/
+	//float radius = 1.0f;
+	//float speed = 20;
+	//glm::vec2 startPos(-40, 0);
+	//float inclination = 45;
+	//
+	//glm::vec2 initialSpeed = glm::vec2(cos(inclination * 0.017) * speed, sin(inclination * 0.017) * speed);
+	//
+	//m_test = new Sphere(startPos, initialSpeed, 2, radius, glm::vec4(1,0,0,1));
+	//m_physicsScene->addActor(m_test);
+	
 
 
 
 
 	/* linear force and momentum tutorial*/
 
-	//Sphere* circle1 = new Sphere(glm::vec2(-20, 0), glm::vec2(0, 0), 4.0f, 4, glm::vec4(1, 0, 0, 1));
-	//Sphere* circle2 = new Sphere(glm::vec2(10, 0), glm::vec2(0, 0), 4.0f, 4, glm::vec4(0, 1, 0, 1));
-	//
-	//m_physicsScene->addActor(circle1);
-	//m_physicsScene->addActor(circle2);
-	//
-	//circle1->applyForceToActor(circle2, glm::vec2(2, 0));
-	//
-	//circle1->applyForce(glm::vec2(30, 0));
-	//circle2->applyForce(glm::vec2(-15, 0));
+	Sphere* circle1 = new Sphere(glm::vec2(-20, 0), glm::vec2(0, 0), 4.0f, 4, glm::vec4(1, 0, 0, 1));
+	Sphere* circle2 = new Sphere(glm::vec2(10, 0), glm::vec2(0, 0), 4.0f, 4, glm::vec4(0, 1, 0, 1));
 	
+	m_physicsScene->addActor(circle1);
+	m_physicsScene->addActor(circle2);
+		
+	circle1->applyForce(glm::vec2(30, 0));
+	circle2->applyForce(glm::vec2(-15, 0));
 
 	
+	Plane* plane1 = new Plane(glm::vec2(0, 1), -40);
+
+	m_physicsScene->addActor(plane1);
+	
+
+	Square* box1 = new Square(glm::vec2(40, 40), glm::vec2(0, 0), 4.0f, glm::vec2(4, 4), glm::vec4(0, 0, 1, 1));
+	Square* box2 = new Square(glm::vec2(20, 40), glm::vec2(0, 0), 4.0f, glm::vec2(4, 2), glm::vec4(0, 0, 1, 1));
+
+
+	m_physicsScene->addActor(box1);
+	m_physicsScene->addActor(box2);
+
+
+	box1->applyForce(glm::vec2(-10, 0));
+	box2->applyForce(glm::vec2(0, 0));
+
 	
 	return true;
 }
@@ -99,16 +112,23 @@ void PhysicsTestApp::update(float deltaTime) {
 	// input example
 	aie::Input* input = aie::Input::getInstance();
 	
-//	aie::Gizmos::clear();
+	//turn off to draw without deleting previous stuff
+
+	aie::Gizmos::clear();
+
+
 
 	m_physicsScene->update(deltaTime);
 	m_physicsScene->updatedGizmos();
 
-	//allows the object to rise
-	if (input->isKeyDown(aie::INPUT_KEY_SPACE))
-	{
-		m_test->applyForce(glm::vec2(0, 2));
-	}
+	/*allows the object to rise in projectile tutorial*/
+	//if (input->isKeyDown(aie::INPUT_KEY_SPACE))
+	//{
+	//	m_sphere->applyForce(glm::vec2(0, 2));
+	//}
+
+
+
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();

@@ -5,6 +5,8 @@
 #include <Gizmos.h>
 #include "PhysicsScene.h"
 #include "Sphere.h"
+#include "Plane.h"
+#include "Square.h"
 
 
 class PhysicsTestApp : public aie::Application {
@@ -26,5 +28,5 @@ protected:
 	aie::Renderer2D*	m_2dRenderer;
 	aie::Font*			m_font;
 	PhysicsScene*		m_physicsScene;
-	Sphere*				m_test;
+	Sphere*				m_sphere;
 };

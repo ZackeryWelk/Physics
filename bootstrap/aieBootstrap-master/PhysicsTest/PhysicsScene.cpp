@@ -47,6 +47,7 @@ void PhysicsScene::debugScene()
 
 void PhysicsScene::update(float dt)
 {
+	checkForCollisions();
 	static std::list<PhysicsObject*> dirty;
 	// update the physics at a fixed time step
 
@@ -97,4 +98,139 @@ void PhysicsScene::updatedGizmos()
 	{
 		pActor->makeGizmo();
 	}
+}
+
+typedef bool(*fn)(PhysicsObject*, PhysicsObject*);
+
+static fn collisionFunctionArray[] =
+{
+	PhysicsScene::plane2Plane,	PhysicsScene::plane2Sphere,  PhysicsScene::plane2Box,
+	PhysicsScene::sphere2Plane,	PhysicsScene::sphere2Sphere, PhysicsScene::sphere2Box,
+	PhysicsScene::box2Plane,	PhysicsScene::box2Sphere,	 PhysicsScene::box2Box
+};
+
+void PhysicsScene::checkForCollisions()
+{
+	int actorCount = m_actors.size();
+
+	//need to check for collisions against all objects except this one
+	for (int outer = 0; outer < actorCount - 1; outer++)
+	{
+		for (int inner = outer + 1; inner < actorCount; inner++)
+		{
+			PhysicsObject* object1 = m_actors[outer];
+			PhysicsObject* object2 = m_actors[inner];
+			int shapeId1 = object1->getShapeID();
+			int shapeId2 = object2->getShapeID();
+
+			//using function pointers
+			int functionIdx = (shapeId1 * SHAPECOUNT) + shapeId2;
+			fn collisionFunctionPtr = collisionFunctionArray[functionIdx];
+			if (collisionFunctionPtr != nullptr)
+			{
+				//did a collision occur?
+				collisionFunctionPtr(object1, object2);
+			}
+		}
+	}
+}
+
+bool PhysicsScene::plane2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
+{
+	//isnt possible
+	return false;
+}
+
+bool PhysicsScene::plane2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
+{
+	return false;
+}
+
+bool PhysicsScene::plane2Box(PhysicsObject* obj1, PhysicsObject* obj2)
+{
+	return false;
+}
+
+
+
+
+bool PhysicsScene::sphere2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
+{
+	Sphere *sphere = dynamic_cast<Sphere*>(obj1);
+	Plane *plane = dynamic_cast<Plane*>(obj2);
+
+	//if the collision is successful then test for collision
+	if (sphere != nullptr && plane != nullptr)
+	{
+		glm::vec2 collisionNormal = plane->getNormal();
+		float sphereToPlane = glm::dot(sphere->getPosition(), plane->getNormal()) - plane->getDistance();
+
+		//if we are behind plane then we flip the normal
+		if (sphereToPlane < 0)
+		{
+			collisionNormal *= -1;
+			sphereToPlane *= -1;
+		}
+
+		float intersection = sphere->getRadius() - sphereToPlane;
+		if (intersection > 0)
+		{
+			plane->resolveCollision(sphere);
+			return true;
+		}
+	}
+	return false;
+}
+
+bool PhysicsScene::sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
+{
+	Sphere *sphere1 = dynamic_cast<Sphere*>(obj1);
+	Sphere *sphere2 = dynamic_cast<Sphere*>(obj2);
+	//if it is successful then test for collision
+	if (sphere1 != nullptr && sphere2 != nullptr)
+	{
+		if (glm::distance(sphere1->getPosition(), sphere2->getPosition()) < (sphere1->getRadius() + sphere2->getRadius()))
+		{
+			sphere1->resolveCollision(sphere2);
+				
+			return true;
+		}
+	}
+	return false;
+}
+
+bool PhysicsScene::sphere2Box(PhysicsObject* obj1, PhysicsObject* obj2)
+{
+	return false;
+}
+
+
+
+
+bool PhysicsScene::box2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
+{
+	return false;
+}
+
+bool PhysicsScene::box2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
+{
+	return false;
+}
+
+bool PhysicsScene::box2Box(PhysicsObject* obj1, PhysicsObject* obj2)
+{
+	Square *box1 = dynamic_cast<Square*>(obj1);
+	Square *box2 = dynamic_cast<Square*>(obj2);
+
+
+	if (box1 != nullptr && box2 != nullptr)
+	{
+	//	if ()
+	//	{
+	//		box1->stop();
+	//		box2->stop();
+	//		return true;
+	//	}
+	}
+	return false;
 }
