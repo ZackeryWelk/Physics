@@ -46,33 +46,33 @@ bool PhysicsTestApp::startup() {
 
 
 
-	/* linear force and momentum tutorial*/
+	/*Physics*/
 
-	Sphere* circle1 = new Sphere(glm::vec2(-20, 0), glm::vec2(0, 0), 4.0f, 4, glm::vec4(1, 0, 0, 1));
-	Sphere* circle2 = new Sphere(glm::vec2(10, 0), glm::vec2(0, 0), 4.0f, 4, glm::vec4(0, 1, 0, 1));
+	Sphere* circle1 = new Sphere(glm::vec2(-45, 40), glm::vec2(0, 0), 4.0f, 4, glm::vec4(1, 0, 0, 1));
+	Sphere* circle2 = new Sphere(glm::vec2(30, 10), glm::vec2(0, 0), 8.0f, 4, glm::vec4(0, 1, 0, 1));
 	
 	m_physicsScene->addActor(circle1);
 	m_physicsScene->addActor(circle2);
 		
-	circle1->applyForce(glm::vec2(30, 0));
-	circle2->applyForce(glm::vec2(-15, 0));
+	circle1->applyForce(glm::vec2(40, 0));
+	circle2->applyForce(glm::vec2(-40, 0));
 
 	
-	Plane* plane1 = new Plane(glm::vec2(0, 1), -40);
-
+	Plane* plane1 = new Plane(glm::vec2(/*0.707f, 0.707f*/0,1), -10);
+	
 	m_physicsScene->addActor(plane1);
 	
 
-	Square* box1 = new Square(glm::vec2(40, 40), glm::vec2(0, 0), 4.0f, glm::vec2(4, 4), glm::vec4(0, 0, 1, 1));
-	Square* box2 = new Square(glm::vec2(20, 40), glm::vec2(0, 0), 4.0f, glm::vec2(4, 2), glm::vec4(0, 0, 1, 1));
+//	Square* box1 = new Square(glm::vec2(40, 40), glm::vec2(0, 0), 4.0f, glm::vec2(4, 4), glm::vec4(0, 0, 1, 1));
+//	Square* box2 = new Square(glm::vec2(20, 40), glm::vec2(0, 0), 4.0f, glm::vec2(4, 2), glm::vec4(0, 0, 1, 1));
 
 
-	m_physicsScene->addActor(box1);
-	m_physicsScene->addActor(box2);
+//	m_physicsScene->addActor(box1);
+//	m_physicsScene->addActor(box2);
 
 
-	box1->applyForce(glm::vec2(-10, 0));
-	box2->applyForce(glm::vec2(0, 0));
+//	box1->applyForce(glm::vec2(-10, 0));
+//	box2->applyForce(glm::vec2(0, 0));
 
 	
 	return true;

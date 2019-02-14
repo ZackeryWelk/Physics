@@ -159,7 +159,7 @@ bool PhysicsScene::sphere2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
 	Sphere *sphere = dynamic_cast<Sphere*>(obj1);
 	Plane *plane = dynamic_cast<Plane*>(obj2);
 
-	//if the collision is successful then test for collision
+	//if this check is successful then test for collision
 	if (sphere != nullptr && plane != nullptr)
 	{
 		glm::vec2 collisionNormal = plane->getNormal();
@@ -175,6 +175,8 @@ bool PhysicsScene::sphere2Plane(PhysicsObject* obj1, PhysicsObject* obj2)
 		float intersection = sphere->getRadius() - sphereToPlane;
 		if (intersection > 0)
 		{
+			sphere->setPosition(sphere->getPosition() + collisionNormal * intersection);
+
 			plane->resolveCollision(sphere);
 			return true;
 		}
@@ -189,8 +191,17 @@ bool PhysicsScene::sphere2Sphere(PhysicsObject* obj1, PhysicsObject* obj2)
 	//if it is successful then test for collision
 	if (sphere1 != nullptr && sphere2 != nullptr)
 	{
-		if (glm::distance(sphere1->getPosition(), sphere2->getPosition()) < (sphere1->getRadius() + sphere2->getRadius()))
+		glm::vec2 displacement = sphere1->getPosition() - sphere2->getPosition();
+		if (glm::length(displacement) < (sphere1->getRadius() + sphere2->getRadius()))
 		{
+			
+			float overlap = (sphere1->getRadius() + sphere2->getRadius()) - (glm::length(displacement));
+			glm::vec2 offset = glm::normalize(displacement) * overlap;
+
+
+			sphere1->setPosition(sphere1->getPosition() + offset * 0.5f);
+			sphere2->setPosition(sphere2->getPosition() + -offset * 0.5f);
+
 			sphere1->resolveCollision(sphere2);
 				
 			return true;
